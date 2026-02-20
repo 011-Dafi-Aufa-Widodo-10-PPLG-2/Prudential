@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prudential - Konsultasi Asuransi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FAFAFA;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 480px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 520px) {
+            .card {
+                padding: 24px;
+                border-radius: 20px;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 32px;
+        }
+
+        .progress-segment {
+            height: 4px;
+            flex: 1;
+            border-radius: 4px;
+            background: #E5E5E5;
+            transition: all 0.3s ease;
+        }
+
+        .progress-segment.active-1 {
+            background: linear-gradient(90deg, #FF6B35 0%, #FF6B35 100%);
+        }
+
+        .progress-segment.active-2 {
+            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 100%);
+        }
+
+        .progress-segment.active-3 {
+            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 50%, #E91E8C 100%);
+        }
+
+        .progress-segment.active-4 {
+            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 33%, #E91E8C 66%, #8E44AD 100%);
+        }
+
+        .progress-segment.active-5 {
+            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 25%, #E91E8C 50%, #8E44AD 75%, #3498DB 100%);
+        }
+
+        .progress-segment.active-6 {
+            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 20%, #E91E8C 40%, #8E44AD 60%, #3498DB 80%, #2ECC71 100%);
+        }
+
+        /* Question */
+        .question {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A1A1A;
+            line-height: 1.4;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 520px) {
+            .question {
+                font-size: 18px;
+            }
+        }
+
+        /* Options */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border: 2px solid #E5E5E5;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background: #FFFFFF;
+        }
+
+        .option:hover {
+            background: #F8F9FA;
+            border-color: #CCCCCC;
+        }
+
+        .option.selected {
+            background: #FFF5F5;
+            border-color: #ED1B2E;
+        }
+
+        .option-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1A1A1A;
+        }
+
+        .option.selected .option-text {
+            color: #ED1B2E;
+        }
+
+        .radio-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #E5E5E5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0;
+        }
+
+        .option:hover .radio-circle {
+            border-color: #CCCCCC;
+        }
+
+        .option.selected .radio-circle {
+            border-color: #ED1B2E;
+            background: #ED1B2E;
+        }
+
+        .radio-inner {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .option.selected .radio-inner {
+            opacity: 1;
+        }
+
+        /* Input Fields - Step 6 */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666666;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #E5E5E5;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            color: #1A1A1A;
+            background: #FFFFFF;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #ED1B2E;
+            box-shadow: 0 0 0 3px rgba(237, 27, 46, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #AAAAAA;
+        }
+
+        .input-field.error {
+            border-color: #E74C3C;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .btn-continue {
+            width: 100%;
+            padding: 18px;
+            background: #ED1B2E;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 14px rgba(237, 27, 46, 0.3);
+        }
+
+        .btn-continue:hover {
+            background: #C41224;
+            box-shadow: 0 6px 20px rgba(237, 27, 46, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-continue:active {
+            transform: translateY(0);
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: #666666;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px;
+            transition: color 0.2s ease-in-out;
+            align-self: center;
+        }
+
+        .btn-back:hover {
+            color: #1A1A1A;
+        }
+
+        .btn-back.hidden {
+            visibility: hidden;
+        }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .success-screen.active {
+            display: block;
+        }
+
+        .form-screen.hidden {
+            display: none;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FF6B35, #ED1B2E, #E91E8C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(237, 27, 46, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(237, 27, 46, 0);
+            }
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1A1A1A;
+            margin-bottom: 16px;
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .summary {
+            background: #F8F9FA;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666666;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: #666666;
+        }
+
+        .summary-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1A1A;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            background: #25D366;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            background: #20BD5A;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .whatsapp-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Step transition */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            max-width: 160px;
+            height: auto;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ED1B2E;
+            letter-spacing: 2px;
+            padding: 6px 16px;
+            border: 2px solid #ED1B2E;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        /* Privacy note */
+        .privacy-note {
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="img/prudential-seeklogo.png" alt="Prudential" class="logo-img">
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressBar">
+            <div class="progress-segment active-1"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+            <div class="progress-segment"></div>
+        </div>
+
+        <!-- Form Screen -->
+        <div class="form-screen" id="formScreen">
+            <!-- Step 1: Kebutuhan -->
+            <div class="step-content" data-step="1">
+                <h2 class="question">Apa jenis proteksi asuransi yang anda butuhkan saat ini?</h2>
+                <div class="options" data-group="kebutuhan">
+                    <div class="option" data-value="Asuransi Kesehatan">
+                        <span class="option-text">Asuransi Kesehatan</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Asuransi Jiwa">
+                        <span class="option-text">Asuransi Jiwa</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Unit Link">
+                        <span class="option-text">Asuransi yang dikaitkan dengan investasi (Unit Link)</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Anggaran -->
+            <div class="step-content" data-step="2">
+                <h2 class="question">Berapa budget bulanan yang anda alokasikan untuk proteksi keluarga?</h2>
+                <div class="options" data-group="anggaran">
+                    <div class="option" data-value="Kurang dari Rp 500.000">
+                        <span class="option-text">Kurang dari Rp 500.000</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Rp 500.000 - Rp 1.000.000">
+                        <span class="option-text">Rp 500.000 - Rp 1.000.000</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Rp 1.000.000 - Rp 2.000.000">
+                        <span class="option-text">Rp 1.000.000 - Rp 2.000.000</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Rp 2.000.000 - Rp 5.000.000">
+                        <span class="option-text">Rp 2.000.000 - Rp 5.000.000</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Lebih dari Rp 5.000.000">
+                        <span class="option-text">Lebih dari Rp 5.000.000</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Waktu Hari -->
+            <div class="step-content" data-step="3">
+                <h2 class="question">Kapan waktu yang lebih nyaman untuk anda?</h2>
+                <div class="options" data-group="waktu_hari">
+                    <div class="option" data-value="Weekdays (Senin-Jumat)">
+                        <span class="option-text">Weekdays (Senin-Jumat)</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Weekend (Sabtu-Minggu)">
+                        <span class="option-text">Weekend (Sabtu-Minggu)</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Waktu Jam -->
+            <div class="step-content" data-step="4">
+                <h2 class="question">Pilih jam operasional yang tersedia?</h2>
+                <div class="options" data-group="waktu_jam">
+                    <div class="option" data-value="09.00 - 11.00 WIB">
+                        <span class="option-text">09.00 - 11.00 WIB</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="11.00 - 13.00 WIB">
+                        <span class="option-text">11.00 - 13.00 WIB</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="13.00 - 15.00 WIB">
+                        <span class="option-text">13.00 - 15.00 WIB</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="15.00 - 17.00 WIB">
+                        <span class="option-text">15.00 - 17.00 WIB</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="17.00 - 19.00 WIB">
+                        <span class="option-text">17.00 - 19.00 WIB</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Lokasi -->
+            <div class="step-content" data-step="5">
+                <h2 class="question">Dimana anda ingin bertemu dengan Tim Prudential?</h2>
+                <div class="options" data-group="lokasi">
+                    <div class="option" data-value="Di Rumah">
+                        <span class="option-text">Di Rumah</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Di Kantor">
+                        <span class="option-text">Di Kantor</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                    <div class="option" data-value="Di Area Publik (Kafe/Mall)">
+                        <span class="option-text">Di Area Publik (Kafe/Mall)</span>
+                        <div class="radio-circle">
+                            <div class="radio-inner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Data Diri -->
+            <div class="step-content" data-step="6">
+                <h2 class="question">Isi data diri Anda untuk melanjutkan</h2>
+                <div class="input-group">
+                    <label class="input-label" for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" class="input-field" placeholder="Contoh: Budi Santoso" data-field="nama">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="whatsapp">No. WhatsApp</label>
+                    <input type="tel" id="whatsapp" class="input-field" placeholder="Contoh: 081234567890" data-field="whatsapp">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="email">Email</label>
+                    <input type="email" id="email" class="input-field" placeholder="Contoh: budi@email.com" data-field="email">
+                </div>
+                <p class="privacy-note">Data Anda akan terjaga kerahasiannya dan hanya digunakan untuk keperluan konsultasi.</p>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <button class="btn-back hidden" id="btnBack">← Kembali</button>
+                <button class="btn-continue" id="btnContinue">Lanjutkan</button>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="success-screen" id="successScreen">
+            <div class="success-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="success-title">Terima Kasih!</h2>
+            <p class="success-message">Tim Prudential akan menghubungi Anda sesuai dengan preferensi yang telah dipilih.</p>
+            
+            <div class="summary" id="summary">
+                <div class="summary-title">Ringkasan Pilihan</div>
+            </div>
+
+            <!-- WhatsApp Button -->
+            <a href="#" class="whatsapp-btn" id="whatsappBtn" target="_blank">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Kirim via WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi WhatsApp - Ganti nomor ini dengan nomor tujuan
+        const WHATSAPP_NUMBER = '62895326878816'; // Format: kode negara + nomor (tanpa +)
+
+        // State management
+        const state = {
+            currentStep: 1,
+            totalSteps: 6,
+            selections: {
+                kebutuhan: '',
+                anggaran: '',
+                waktu_hari: '',
+                waktu_jam: '',
+                lokasi: '',
+                nama: '',
+                whatsapp: '',
+                email: ''
+            }
+        };
+
+        // DOM Elements
+        const formScreen = document.getElementById('formScreen');
+        const successScreen = document.getElementById('successScreen');
+        const progressBar = document.getElementById('progressBar');
+        const btnContinue = document.getElementById('btnContinue');
+        const btnBack = document.getElementById('btnBack');
+        const summary = document.getElementById('summary');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+
+        // Update progress bar
+        function updateProgressBar() {
+            const segments = progressBar.querySelectorAll('.progress-segment');
+            segments.forEach((segment, index) => {
+                segment.className = 'progress-segment';
+                if (index < state.currentStep) {
+                    segment.classList.add(`active-${state.currentStep}`);
+                }
+            });
+        }
+
+        // Update step visibility
+        function updateStepVisibility() {
+            const steps = document.querySelectorAll('.step-content');
+            steps.forEach(step => {
+                step.classList.remove('active');
+                if (parseInt(step.dataset.step) === state.currentStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        // Update button states
+        function updateButtons() {
+            // Show/hide back button
+            if (state.currentStep === 1) {
+                btnBack.classList.add('hidden');
+            } else {
+                btnBack.classList.remove('hidden');
+            }
+
+            // Update continue button text
+            if (state.currentStep === state.totalSteps) {
+                btnContinue.textContent = 'Kirim';
+            } else {
+                btnContinue.textContent = 'Lanjutkan';
+            }
+        }
+
+        // Get current step selection (for steps 1-5)
+        function getCurrentSelection() {
+            const currentStepEl = document.querySelector(`.step-content[data-step="${state.currentStep}"]`);
+            const selectedOption = currentStepEl.querySelector('.option.selected');
+            return selectedOption ? selectedOption.dataset.value : null;
+        }
+
+        // Save selection (for steps 1-5)
+        function saveSelection() {
+            const currentStepEl = document.querySelector(`.step-content[data-step="${state.currentStep}"]`);
+            const optionsEl = currentStepEl.querySelector('.options');
+            
+            if (!optionsEl) return; // Step 6 doesn't have options
+            
+            const group = optionsEl.dataset.group;
+            const selectedOption = currentStepEl.querySelector('.option.selected');
+            state.selections[group] = selectedOption ? selectedOption.dataset.value : '';
+        }
+
+        // Validate step 6 (contact form)
+        function validateStep6() {
+            const nama = document.getElementById('nama').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            let isValid = true;
+            let firstErrorField = null;
+
+            // Validate Nama
+            const namaField = document.getElementById('nama');
+            if (!nama) {
+                namaField.classList.add('error');
+                isValid = false;
+                firstErrorField = firstErrorField || namaField;
+            } else {
+                namaField.classList.remove('error');
+                state.selections.nama = nama;
+            }
+
+            // Validate WhatsApp
+            const whatsappField = document.getElementById('whatsapp');
+            if (!whatsapp) {
+                whatsappField.classList.add('error');
+                isValid = false;
+                firstErrorField = firstErrorField || whatsappField;
+            } else {
+                whatsappField.classList.remove('error');
+                state.selections.whatsapp = whatsapp;
+            }
+
+            // Validate Email
+            const emailField = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                emailField.classList.add('error');
+                isValid = false;
+                firstErrorField = firstErrorField || emailField;
+            } else {
+                emailField.classList.remove('error');
+                state.selections.email = email;
+            }
+
+            if (!isValid && firstErrorField) {
+                setTimeout(() => {
+                    firstErrorField.classList.remove('error');
+                }, 300);
+            }
+
+            return isValid;
+        }
+
+        // Generate WhatsApp message
+        function generateWhatsAppMessage() {
+            const date = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            let message = `*📋 DATA KONSULTASI ASURANSI PRUDENTIAL*\n\n`;
+            message += `📅 Tanggal: ${date}\n\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            message += `*DATA DIRI:*\n`;
+            message += `👤 Nama: ${state.selections.nama}\n`;
+            message += `📱 WhatsApp: ${state.selections.whatsapp}\n`;
+            message += `📧 Email: ${state.selections.email}\n\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            message += `*PREFERENSI KONSULTASI:*\n`;
+            message += `🏥 Proteksi: ${state.selections.kebutuhan}\n`;
+            message += `💰 Budget: ${state.selections.anggaran}\n`;
+            message += `📅 Hari: ${state.selections.waktu_hari}\n`;
+            message += `🕐 Jam: ${state.selections.waktu_jam}\n`;
+            message += `📍 Lokasi: ${state.selections.lokasi}\n\n`;
+            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            message += `_Data ini dikirim melalui website Prudential_`;
+
+            return encodeURIComponent(message);
+        }
+
+        // Generate summary
+        function generateSummary() {
+            const labels = {
+                kebutuhan: 'Jenis Proteksi',
+                anggaran: 'Budget Bulanan',
+                waktu_hari: 'Waktu Hari',
+                waktu_jam: 'Jam Operasional',
+                lokasi: 'Tempat Bertemu',
+                nama: 'Nama Lengkap',
+                whatsapp: 'No. WhatsApp',
+                email: 'Email'
+            };
+
+            let summaryHTML = '<div class="summary-title">Ringkasan Pilihan</div>';
+            
+            for (const [key, value] of Object.entries(state.selections)) {
+                if (value) {
+                    summaryHTML += `
+                        <div class="summary-item">
+                            <span class="summary-label">${labels[key]}</span>
+                            <span class="summary-value">${value}</span>
+                        </div>
+                    `;
+                }
+            }
+
+            summary.innerHTML = summaryHTML;
+        }
+
+        // Show success screen
+        function showSuccess() {
+            generateSummary();
+            formScreen.classList.add('hidden');
+            successScreen.classList.add('active');
+            progressBar.style.display = 'none';
+
+            // Generate WhatsApp link
+            const message = generateWhatsAppMessage();
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+            whatsappBtn.href = whatsappUrl;
+        }
+
+        // Go to next step
+        function nextStep() {
+            // Handle step 6 differently
+            if (state.currentStep === 6) {
+                if (!validateStep6()) {
+                    return;
+                }
+                showSuccess();
+                return;
+            }
+
+            // Handle steps 1-5
+            const selection = getCurrentSelection();
+            
+            if (!selection) {
+                showError();
+                return;
+            }
+
+            saveSelection();
+
+            if (state.currentStep < state.totalSteps) {
+                state.currentStep++;
+                updateProgressBar();
+                updateStepVisibility();
+                updateButtons();
+            }
+        }
+
+        // Go to previous step
+        function previousStep() {
+            if (state.currentStep > 1) {
+                state.currentStep--;
+                updateProgressBar();
+                updateStepVisibility();
+                updateButtons();
+            }
+        }
+
+        // Handle option click
+        function handleOptionClick(e) {
+            const option = e.currentTarget;
+            const parent = option.parentElement;
+            
+            // Remove selected from all options in this group
+            parent.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected to clicked option
+            option.classList.add('selected');
+        }
+
+        // Show error animation
+        function showError() {
+            const currentStepEl = document.querySelector(`.step-content[data-step="${state.currentStep}"]`);
+            const optionsEl = currentStepEl.querySelector('.options');
+            if (optionsEl) {
+                optionsEl.classList.add('shake');
+                setTimeout(() => {
+                    optionsEl.classList.remove('shake');
+                }, 300);
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', handleOptionClick);
+        });
+
+        btnContinue.addEventListener('click', nextStep);
+        btnBack.addEventListener('click', previousStep);
+
+        // Initialize - show step 1
+        state.currentStep = 1;
+        updateProgressBar();
+        updateStepVisibility();
+        updateButtons();
+    </script>
+</body>
+</html>
