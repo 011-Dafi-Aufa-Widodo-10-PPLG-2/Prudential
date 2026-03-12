@@ -46,7 +46,7 @@
         .progress-container {
             display: flex;
             gap: 4px;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .progress-segment {
@@ -54,45 +54,28 @@
             flex: 1;
             border-radius: 4px;
             background: #E5E5E5;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .progress-segment.active-1 {
-            background: linear-gradient(90deg, #FF6B35 0%, #FF6B35 100%);
-        }
-
-        .progress-segment.active-2 {
-            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 100%);
-        }
-
-        .progress-segment.active-3 {
-            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 50%, #E91E8C 100%);
-        }
-
-        .progress-segment.active-4 {
-            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 33%, #E91E8C 66%, #8E44AD 100%);
-        }
-
-        .progress-segment.active-5 {
-            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 25%, #E91E8C 50%, #8E44AD 75%, #3498DB 100%);
-        }
-
-        .progress-segment.active-6 {
-            background: linear-gradient(90deg, #FF6B35 0%, #ED1B2E 20%, #E91E8C 40%, #8E44AD 60%, #3498DB 80%, #2ECC71 100%);
-        }
+        .progress-segment.active-1 { background: linear-gradient(90deg, #FF6B35, #FF6B35); }
+        .progress-segment.active-2 { background: linear-gradient(90deg, #FF6B35, #ED1B2E); }
+        .progress-segment.active-3 { background: linear-gradient(90deg, #FF6B35, #ED1B2E, #E91E8C); }
+        .progress-segment.active-4 { background: linear-gradient(90deg, #FF6B35, #ED1B2E, #E91E8C, #8E44AD); }
+        .progress-segment.active-5 { background: linear-gradient(90deg, #FF6B35, #ED1B2E, #E91E8C, #8E44AD, #3498DB); }
+        .progress-segment.active-6 { background: linear-gradient(90deg, #FF6B35, #ED1B2E, #E91E8C, #8E44AD, #3498DB, #2ECC71); }
 
         /* Question */
         .question {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 600;
             color: #1A1A1A;
             line-height: 1.4;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         @media (max-width: 520px) {
             .question {
-                font-size: 18px;
+                font-size: 17px;
             }
         }
 
@@ -100,16 +83,16 @@
         .options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .option {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 20px;
+            padding: 14px 18px;
             border: 2px solid #E5E5E5;
-            border-radius: 16px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             background: #FFFFFF;
@@ -118,6 +101,7 @@
         .option:hover {
             background: #F8F9FA;
             border-color: #CCCCCC;
+            transform: translateX(3px);
         }
 
         .option.selected {
@@ -126,18 +110,19 @@
         }
 
         .option-text {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
             color: #1A1A1A;
         }
 
         .option.selected .option-text {
             color: #ED1B2E;
+            font-weight: 600;
         }
 
         .radio-circle {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border: 2px solid #E5E5E5;
             border-radius: 50%;
             display: flex;
@@ -667,7 +652,7 @@
 
     <script>
         // Konfigurasi WhatsApp - Ganti nomor ini dengan nomor tujuan
-        const WHATSAPP_NUMBER = '62895326878816'; // Format: kode negara + nomor (tanpa +)
+        const WHATSAPP_NUMBER = '6281381009682'; // Format: kode negara + nomor (tanpa +)
 
         // State management
         const state = {
@@ -814,22 +799,20 @@
                 minute: '2-digit'
             });
 
-            let message = `*📋 DATA KONSULTASI ASURANSI PRUDENTIAL*\n\n`;
-            message += `📅 Tanggal: ${date}\n\n`;
+            let message = `DATA KONSULTASI ASURANSI PRUDENTIAL\n\n`;
+            message += `Tanggal: ${date}\n\n`;
             message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            message += `*DATA DIRI:*\n`;
-            message += `👤 Nama: ${state.selections.nama}\n`;
-            message += `📱 WhatsApp: ${state.selections.whatsapp}\n`;
-            message += `📧 Email: ${state.selections.email}\n\n`;
+            message += `DATA DIRI:\n`;
+            message += `Nama: ${state.selections.nama}\n`;
+            message += `WhatsApp: ${state.selections.whatsapp}\n`;
+            message += `Email: ${state.selections.email}\n\n`;
             message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            message += `*PREFERENSI KONSULTASI:*\n`;
-            message += `🏥 Proteksi: ${state.selections.kebutuhan}\n`;
-            message += `💰 Budget: ${state.selections.anggaran}\n`;
-            message += `📅 Hari: ${state.selections.waktu_hari}\n`;
-            message += `🕐 Jam: ${state.selections.waktu_jam}\n`;
-            message += `📍 Lokasi: ${state.selections.lokasi}\n\n`;
-            message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            message += `_Data ini dikirim melalui website Prudential_`;
+            message += `PREFERENSI KONSULTASI:\n`;
+            message += `Proteksi: ${state.selections.kebutuhan}\n`;
+            message += `Budget: ${state.selections.anggaran}\n`;
+            message += `Hari: ${state.selections.waktu_hari}\n`;
+            message += `Jam: ${state.selections.waktu_jam}\n`;
+            message += `Lokasi: ${state.selections.lokasi}\n\n`;
 
             return encodeURIComponent(message);
         }
